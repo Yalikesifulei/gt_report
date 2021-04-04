@@ -10,9 +10,76 @@
 \usepackage{verbatim}
 \usepackage{anyfontsize}
 \usepackage{indentfirst}
+\usepackage{titlesec}
+
+\usepackage[psdextra]{hyperref}
+\hypersetup{unicode=true}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+}
 
 \setlist[enumerate]{nosep}
 \graphicspath{{pics/}}
 \DeclareGraphicsExtensions{.png}
 
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepgfplotslibrary{fillbetween}
+\pgfplotsset{compat=1.17}
+
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{positioning,arrows}
+\usetikzlibrary{calc}
+\tikzset{
+	block/.style={
+		draw, 
+		rectangle, 
+		minimum height=1cm, 
+		minimum width=3cm, align=center
+	}, 
+	line/.style={->,>=stealth'}}
+\tikzset{>=latex}
+
+\newcommand\centerarc{} % just for safety
+\def\centerarc[#1]#2(#3)#4(#5:#6:#7)% [draw options] (center) (initial angle:final angle:radius)
+  {\draw[#1]($(#3)+({#7*cos(#5)},{#7*sin(#5)})$)arc(#5:#6:#7);}
+
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\vf}{\varphi}
+\renewcommand{\d}[1]{\dot{#1}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\bvec}[1]{\boldsymbol{\rm #1}}
+\renewcommand{\l}{\left}
+\renewcommand{\r}{\right}
+\newcommand{\norm}[1]{\Vert #1 \Vert}
+\newcommand{\intl}{\int\limits}
+
+
+\counterwithout{equation}{chapter} 
+\counterwithin*{equation}{section}
+
+\newtheoremstyle{exampstyle}
+{3pt} % Space above
+{3pt} % Space below
+{} % Body font
+{} % Indent amount
+{\bfseries} % Theorem head font
+{.} % Punctuation after theorem head
+{.5em} % Space after theorem head
+{} % Theorem head spec (can be left empty, meaning `normal')
+
+\theoremstyle{exampstyle}
+\newtheorem{definition}{Означення}
+\newtheorem*{definition*}{Означення}
+\newtheorem{example}{Приклад}[chapter]
+\newtheorem*{example*}{Приклад}
+\newtheorem{exercise}{Задача}
+\newtheorem*{exercise*}{Задача}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Зауваження}
