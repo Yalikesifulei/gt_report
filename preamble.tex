@@ -33,6 +33,7 @@
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{shapes.geometric}
 \usetikzlibrary{positioning,arrows}
+\usetikzlibrary{decorations.markings}
 \usetikzlibrary{calc}
 \tikzset{
 	block/.style={
@@ -58,10 +59,11 @@
 \renewcommand{\r}{\right}
 \newcommand{\norm}[1]{\Vert #1 \Vert}
 \newcommand{\intl}{\int\limits}
+\newcommand{\dotprod}[2]{\l< #1, #2\r>}
 
 
-\counterwithout{equation}{chapter} 
-\counterwithin*{equation}{section}
+%\counterwithout{equation}{chapter} 
+%\counterwithin*{equation}{section}
 
 \newtheoremstyle{exampstyle}
 {3pt} % Space above
