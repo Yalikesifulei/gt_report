@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import tikzplotlib
-#plt.style.use('seaborn-whitegrid')
 
 def RungeKutta(f, t0, y0, b, h):
     """
@@ -36,11 +35,10 @@ res = RungeKutta(f, 0, np.array([x0, y0]).flatten(), T*1.1, 0.005)
 plt.plot(res['y'][:, 0], res['y'][:, 1], label='$x(t)$', color='#FF0000', alpha=0.5)
 plt.plot(res['y'][:, 2], res['y'][:, 3], label='$y(t)$', color='#00FF00', linestyle='dashed', linewidth=3)
 plt.legend()
-#plt.show()
 print(f'T = {T}, last_point = {res["y"][-1]}')
 dist = ((res['y'][:, :2] - res['y'][:, 2:])**2).sum(axis=1)
 print(np.argmin(dist), np.min(dist))
 print(res['t'][np.argmin(dist)])
 print(res['y'][np.argmin(dist)])
-
+#plt.show()
 #tikzplotlib.save('./code/unoptimal_chase_2d.tex')

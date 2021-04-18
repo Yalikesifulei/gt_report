@@ -12,6 +12,29 @@
 \usepackage{indentfirst}
 \usepackage{titlesec}
 
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\lstdefinestyle{python_code}{ 
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                            
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4
+}
+
 \usepackage[psdextra]{hyperref}
 \hypersetup{unicode=true}
 \hypersetup{
@@ -52,6 +75,7 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\vf}{\varphi}
 \renewcommand{\d}[1]{\dot{#1}}
+\newcommand{\dd}[1]{\ddot{#1}}
 \newcommand{\E}{\mathcal{E}}
 \newcommand{\T}{\mathcal{T}}
 \newcommand{\bvec}[1]{\boldsymbol{\rm #1}}
@@ -59,7 +83,12 @@
 \renewcommand{\r}{\right}
 \newcommand{\norm}[1]{\Vert #1 \Vert}
 \newcommand{\intl}{\int\limits}
+\newcommand{\suml}{\sum\limits}
 \newcommand{\dotprod}[2]{\l< #1, #2\r>}
+\newcommand{\Lap}[1]{\mathcal{L}\l\{#1\r\}}
+\newcommand{\LapInv}[1]{\mathcal{L}^{-1}\l\{#1\r\}}
+\def\setdif{\mathbin{\ooalign{\hss\raise1ex\hbox{.}\hss\cr
+  \mathsurround=0pt$-$}}}
 
 
 %\counterwithout{equation}{chapter} 
