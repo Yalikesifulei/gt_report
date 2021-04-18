@@ -161,3 +161,13 @@ $P$ може наздогнати $E$, якщо $\exists T < +\infty : z(T) = 0 
         0.625 \\ 0.925
     \end{pmatrix}$.
 \end{example}
+
+Нехай утікач повідомляє своє керування $v(t)$ переслідувачу, який буде обирати своє керування $u(t)$.
+Покладемо $u(t) = \widehat{u}(t) + v(t)$, де $\norm{\widehat{u}} \leq \alpha - \beta$ --- це можливо,
+оскільки $\norm{u} \leq \norm{\widehat{u}} + \norm{v} \leq \alpha - \beta + \beta = \alpha$.
+Якщо тепер покласти $\widehat{u} = - (\alpha - \beta) \cdot \frac{z_0}{\norm{z_0}}$, то
+\begin{gather*}
+    \d{z}(t) = u(t) - v(t) = -(\alpha - \beta) \cdot \frac{z_0}{\norm{z_0}} \Rightarrow 
+    z(t) = z_0 -(\alpha - \beta) \cdot \frac{z_0}{\norm{z_0}} \cdot t
+\end{gather*}
+При $T(z_0) = \frac{\norm{z_0}}{\alpha - \beta}$ буде $z(T(z_0)) = 0$ --- переслідування завершиться.

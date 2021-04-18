@@ -14,7 +14,7 @@
         \end{cases}
     \end{gather}
     де $A$ --- деяка стала матриця порядку $n\times n$, $U$ та $V$ --- опуклі компактні
-    підмножини $\R^n$. Також задано матрицю $\pi$, що є матрицею проекції на термінальну множину.
+    підмножини $\R^n$. Також задано матрицю $\pi$, що є матрицею проекції на ортогональне доповнення до термінальної множини.
 \end{definition}
 Ця гра відбувається таким чином: в кожний момент часу $t$ утікач $E$ знає параметри гри
 $\l(A, U, V, z_0, \pi \r)$ та обирає своє керування $v(t) \in V$, повідомляючи про свій вибір
@@ -125,7 +125,7 @@ $, що означає, що в момент $T_0$ переслідувач на
     \item Знайти розв'язок задачі Коші $\d{z} = Az - u(t) + v(t), \; z(0) = z_0$ на відрізку $[0; T_0]$.
 \end{enumerate}
 
-\begin{example}(\cite{4})\label{ex_4_3}
+\begin{example}[контрольний приклад Понтрягіна, \cite{4}]\label{ex_4_3}
     Нехай рух гравців в $\R^n$, $n\geq 2$, описується системою
     \begin{gather*}
         \begin{cases}
@@ -193,17 +193,18 @@ $, що означає, що в момент $T_0$ переслідувач на
     \end{gather*}
     \begin{gather*}
         = \frac{\rho}{\alpha^2}\l(\alpha t + e^{-\alpha t} - 1\r) - 
-        \frac{\sigma}{\beta^2}\l(\beta t + e^{-\beta t} - 1\r)
+        \frac{\sigma}{\beta^2}\l(\beta t + e^{-\beta t} - 1\r) = r(t)
     \end{gather*}
     Далі необхідно знайти таке (найменше) значення $T_0$, для якого точка $\pi e^{A T_0}(z^1_0, z^2_0, z^3_0)$ належить
     $\Omega(T_0)$. З геометричних міркувань це буде найменший корінь рівняння
     \begin{gather*}
-        \l( \frac{\rho}{\alpha^2}\l(\alpha t + e^{-\alpha t} - 1\r) - 
-        \frac{\sigma}{\beta^2}\l(\beta t + e^{-\beta t} - 1\r)\r)^2 = \norm{\pi e^{A t} z_0}^2
+        \frac{\rho}{\alpha^2}\l(\alpha t + e^{-\alpha t} - 1\r) - 
+        \frac{\sigma}{\beta^2}\l(\beta t + e^{-\beta t} - 1\r) = \norm{\pi e^{A t} z_0}
     \end{gather*}
     
-    Наступний крок будемо проводити на конкретному прикладі. Нехай гра відбувається на площині
-    з початковими умовами $x(0) = \begin{pmatrix}
+    Наступний крок будемо проводити на конкретному прикладі. Нехай гра відбувається на площині з 
+    $\alpha=1$, $\beta=2$, $\rho=2$, $\sigma=1$ та
+    початковими умовами $x(0) = \begin{pmatrix}
         3 \\ 2
     \end{pmatrix}, \d{x}(0) = \begin{pmatrix}
         1 \\ 1
@@ -211,7 +212,10 @@ $, що означає, що в момент $T_0$ переслідувач на
         1 \\ 0
     \end{pmatrix}, \d{y}(0) = \begin{pmatrix}
         0 \\ 1
-    \end{pmatrix}$. Чисельно можна знайти $T_0 \approx 3.715$.
+    \end{pmatrix}$. Чисельно можна знайти значення $T_0 \approx 3.715$.
+    \begin{center}
+        \input{code/pontr_method_plot.tex}
+    \end{center}
 \end{example}
 \begin{example}
     Розглянемо тепер гру з простим рухом:
@@ -258,5 +262,138 @@ $, що означає, що в момент $T_0$ переслідувач на
 \end{example}
 
 \section{Метод розв'язуючих функцій}
-%Цей метод належить А.О. Чикрію та детально досліджений у \cite{6}.
-%Розглядається не просто 
+Цей метод належить А.О. Чикрію та детально досліджений у \cite{6}.
+Розглядається не просто лінійна диференціальна гра виду \ref{lin_game}, а більш загальна
+\emph{квазілінійна} гра виду 
+\begin{gather}\label{qlin_game}
+    \begin{cases}
+        \d{z} = A z + \vf(u, v) \\
+        z(0) = z_0 \\
+        z \in \R^n, u \in U, v \in V
+    \end{cases}
+\end{gather}
+де $\vf(u, v) : U\times V \to \R^n$ --- неперервна за обома змінними функція.
+\begin{remark}
+    У випадку $\vf(u,v) = -u + v$ отримуємо лінійну гру (\ref{lin_game}).
+\end{remark}
+Термінальна множина має вид $M^* = M^0 + M$, де
+$M^0$ --- деякий лінійний підпростір $\R^n$, а $M$ --- компактна підмножина ортогонального доповнення $M^0$,
+$\pi$ --- проектор на $(M^0)^\perp$.
+
+Нехай $\vf(U, v) = \l\{\vf(u,v) : u \in U\r\}$ для фіксованої $v \in V$,
+$W(t, v) = \pi e^{At} \vf(U, v)$,
+$W(t) = \bigcap\limits_{v \in V} W(t, v), t\geq 0$. 
+\begin{remark}
+    У випадку $\vf(u,v) = -u + v$ $W(t) = \pi e^{At}U \setdif \pi e^{At} V$.
+\end{remark}
+
+Вводяться позначення:
+\begin{gather*}
+    \gamma(t) \in W(t) \text{ --- вимірна функція} \\
+    \xi(t, z, \gamma(\cdot)) = \pi e^{A t} + \intl_0^t \gamma(\tau) d\tau \\
+    \alpha(t, \tau, z, v, \gamma(\cdot)) = \\ = \sup\l\{ 
+        \alpha \geq 0 : \l[ W(t-\tau, v) - \gamma(t-\tau)\r] \cap \alpha
+        \l[M - \xi(t, z, \gamma(\cdot))\r] \neq \varnothing
+    \r\} \\
+    T(z, \gamma(\cdot) = \inf \l\{ 
+        t\geq 0: \intl_0^t \underset{v\in V}{\inf} \alpha(t, \tau, z, v, \gamma(\cdot)) d\tau \geq 1
+    \r\}
+\end{gather*}
+
+\begin{definition}
+    $\alpha(t, \tau, z, v, \gamma(\cdot))$ називається \emph{розв'язуючою функцією}.  
+\end{definition}
+
+У \cite{6} доведено наступне: якщо $W(t) \neq \varnothing$ для всіх $t\geq 0$,
+$M$ --- опукла множина, $T(z_0, \gamma_0(\cdot)) < +\infty$ для деякого початкового положення
+$z_0$ та деякої $\gamma^0(\cdot)$, то за час $T(z_0, \gamma_0(\cdot))$ гравці потрапляють у термінальну множину.
+
+Також у \cite{6} доведено, що якщо гра (\ref{qlin_game}) є лінійною,
+$W(t) = \pi e^{At}U \setdif \pi e^{At} V \neq \varnothing$, існує неперервна 
+$r(t): [0; +\infty) \to [0; +\infty)$ та число $l \geq 0$ такі, що
+$\pi e^{A t}U = r(t) S$, $M = l S$, де $S$ --- одинична куля в $(M^0)^\perp$ з центром в нулі, то
+при $\xi(t, z, \gamma(\cdot)) \notin l S$, розв'язуюча функція $\alpha$ може бути знайдена як найбільший додатний корінь квадратного рівняння
+\begin{gather}\label{lin_res_func}
+    \norm{\pi e^{a(t-\tau)}v + \gamma(t-\tau) - \alpha \cdot \xi(t, z, \gamma(\cdot))} = r(t-\tau) + \alpha l
+\end{gather}
+
+\begin{example}[контрольний приклад Понтрягіна, \cite{6}]\label{ex_4_5}
+    Як у прикладі \ref{ex_4_3}, одразу перейдемо від системи
+    \begin{gather*}
+        \begin{cases}
+            \dd{x} + \alpha \d{x} = \rho u, & \norm{a} \leq 1 \\
+            \dd{y} + \beta \d{y} = \sigma v, & \norm{b} \leq 1
+        \end{cases}
+    \end{gather*}
+    до системи з $z_1 = x - y$, $z_2 = \d{x}$, $z_3 = \d{y}$:
+    \begin{gather*}
+        \begin{cases}
+            \d{z}_1 = z_2 - z_3 \\
+            \d{z}_2 = -\alpha z_2 + \rho u \\
+            \d{z}_3 = -\beta z_3 + \sigma v
+        \end{cases}
+    \end{gather*}
+    Термінальна множина $M^* = \l\{z: z_1 = 0 \r\} = M^0 + \{0\}$, ортогональне доповнення
+    $(M^0)^\perp =\l\{z: z_2 = z_3 = 0 \r\}$, тому $\pi = \begin{pmatrix}
+        I & 0 & 0 \\
+        0 & 0 & 0 \\
+        0 & 0 & 0
+    \end{pmatrix}$, де $I$ та $0$ --- тотожній та нульовий оператор відповідно.
+    Оскільки у вихідній системі рівнянь $x, y \in \R^n$, то $z \in \R^{3n}$,
+    то $\pi : \R^{3n} \to (M^0)^\perp$. Матриця системи
+    $A = \begin{pmatrix}
+        0 & E & -E \\
+        0 & -\alpha E & 0 \\
+        0 & 0 & -\beta E
+    \end{pmatrix}$,
+    $
+    U = \l\{ \begin{pmatrix}0 \\ \rho u \\ 0 \end{pmatrix} : \norm{u} \leq 1\r\}
+    $,
+    $
+    V = \l\{ \begin{pmatrix}0 \\ 0 \\ \sigma v \end{pmatrix} : \norm{v} \leq 1\r\}
+    $.
+    Аналогічно прикладу \ref{ex_4_3},
+    \begin{gather*}
+        \pi e^{At} U = \frac{1 - e^{-\alpha t}}{\alpha} \rho S, \;
+        \pi e^{At} V = \frac{1 - e^{-\beta t}}{\beta} \sigma S \\
+        W(t) = \l(\frac{1 - e^{-\alpha t}}{\alpha} \rho - \frac{1 - e^{-\beta t}}{\beta} \sigma\r) S = \omega(t) S
+    \end{gather*}
+    Радіус цієї кулі невід'ємний при $\rho \geq \sigma$ та $\frac{\rho}{\alpha} \geq \frac{\sigma}{\beta}$.
+    Поклавши $\gamma(t) = 0$, отримаємо
+    $\xi(t, z, 0) = z_1 + \frac{1 - e^{-\alpha t}}{\alpha} z_2 - \frac{1 - e^{-\beta t}}{\beta}z_3$.
+    Ця задача задовольняє всі умови для пошуку розв'язуючої функції через (\ref{lin_res_func}):
+    \begin{gather*}
+        \norm{\frac{1 - e^{-\beta t}}{\beta} \sigma v - \alpha \cdot \xi(t, z, 0)} = \frac{1 - e^{-\alpha t}}{\alpha} \rho
+    \end{gather*}
+    У \cite{6} показується, що 
+    \begin{gather*}
+        \underset{\norm{v}\leq 1}{\min}{\alpha(t, \tau, z, v, 0)} = \frac{\omega(t-\tau)}{\norm{\xi(t, z, 0)}}
+    \end{gather*}
+    і мінімум досягається при $v = -\frac{\xi(t, z, 0)}{\norm{\xi(t, z, 0)}}$, а час, коли переслідувач наздожене утікача, визначається як
+    \begin{gather*}
+        T(z, 0) = \min \l\{ t\geq 0 : \intl_0^t \frac{\omega(t-\tau)}{\norm{\xi(t, z, 0)}} d\tau = 1 \r\}
+    \end{gather*}
+    або ж як найменший додатний корінь рівняння
+    \begin{gather*}
+        \norm{\xi(t, z, 0)} = \intl_0^t \l(\frac{1 - e^{-\alpha \tau}}{\alpha} \rho - \frac{1 - e^{-\beta \tau}}{\beta} \sigma\r) d\tau
+    \end{gather*}
+    
+    Розглянемо тепер конкретний приклад. Нехай ця гра відбувається на площині з 
+    $\alpha=1$, $\beta=2$, $\rho=2$, $\sigma=1$ та
+    початковими умовами $x(0) = \begin{pmatrix}
+        3 \\ 2
+    \end{pmatrix}, \d{x}(0) = \begin{pmatrix}
+        1 \\ 1
+    \end{pmatrix}, y(0) = \begin{pmatrix}
+        1 \\ 0
+    \end{pmatrix}, \d{y}(0) = \begin{pmatrix}
+        0 \\ 1
+    \end{pmatrix}$.
+    Чисельно можна знайти значення $T_0 \approx 3.715$.
+    \begin{center}
+        \input{code/res_func_plot.tex}
+    \end{center}
+    Видно, що отриманий виявися таким самим, як і за допомогою метода Понтрягіна в прикладі
+    \ref{ex_4_3}, причому це виразилося не тільки у відповіді, а й у однаковості рівняння,
+    з якого вона знаходилася.
+\end{example}
