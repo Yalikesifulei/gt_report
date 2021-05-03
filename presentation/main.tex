@@ -1,0 +1,327 @@
+\documentclass[10pt,pdf]{beamer}
+
+\usefonttheme[onlymath]{serif}
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,ukrainian]{babel}
+\usepackage{ragged2e}
+\justifying
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepgfplotslibrary{fillbetween}
+\pgfplotsset{compat=1.17}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\vf}{\varphi}
+\renewcommand{\d}[1]{\dot{#1}}
+\newcommand{\dd}[1]{\ddot{#1}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\bvec}[1]{\boldsymbol{\rm #1}}
+\renewcommand{\l}{\left}
+\renewcommand{\r}{\right}
+\newcommand{\norm}[1]{\left\Vert #1 \right\Vert}
+\newcommand{\intl}{\int\limits}
+\newcommand{\suml}{\sum\limits}
+\newcommand{\dotprod}[2]{\l< #1, #2\r>}
+\newcommand{\Lap}[1]{\mathcal{L}\l\{#1\r\}}
+\newcommand{\LapInv}[1]{\mathcal{L}^{-1}\l\{#1\r\}}
+\def\setdif{\mathbin{\ooalign{\hss\raise1ex\hbox{.}\hss\cr
+  \mathsurround=0pt$-$}}}
+
+\usepackage{graphicx}
+\graphicspath{ {./pics/} }
+
+\usetheme{Luebeck}
+\title{Основи диференціальних ігор}
+\author{Н. Фордуй, О. Галганов}
+
+
+\date{}
+\begin{document}
+    \begin{frame}
+        \titlepage
+    \end{frame}
+    \begin{frame}
+        \frametitle{Основні поняття}
+    
+        Рiшення, що їх приймають гравцi, полягають у виборi так званих \textbf{керувань}, вiд яких залежать \textbf{фазовi координати}: 
+        їх значення у будь-який момент часу повнiстю визначає хiд гри, характеризуючи положення гравцiв у деякому просторi — \textbf{фазовому просторi}. 
+
+        Поточнi значення фазових координат завжди вiдомi
+        гравцям — тобто, це iгри з повною iнформацiєю. Невiдомим зазвичай є
+        характер їх змiни: тобто, \textbf{керування} фазовими змiнними гравцями.
+        \begin{block}{Приклад}
+            Положення матеріальної точки на площині описується двома координатами $x_1$ та $x_2$. 
+            Нехай швидкість руху точки є сталою $v$, а гравець обирає напрямок швидкості $\vf$ та може змінювати його у будь-який момент часу --- тобто, $\vf$
+            є керуванням. Тоді рух точки описується системою диференціальних рівнянь
+            \begin{gather*}
+                \begin{cases}
+                    \d{x_1} = v \cos \vf \\
+                    \d{x_2} = v \sin \vf
+                \end{cases}
+            \end{gather*}
+        \end{block}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Приклад}
+    
+        Геометричне положення автомобіля на декартовій площині описується трьома фазовими координатами:
+        $x_1, x_2$ --- положення деякої точки автомобіля, $x_3$ --- кут, який утворює вісь вздовж автомобіля
+        з деяким фіксованим напрямком --- наприклад, $x_1$.
+        \begin{center}
+            \begin{tikzpicture}
+                \draw [->, thick] (-0.5, 0) -- (5, 0);
+                \draw [->, thick] (0, -0.5) -- (0, 3);
+                \node [below] at (5, 0) {$x_1$};
+                \node [left] at (0, 3) {$x_2$};
+                \filldraw [fill=lightgray, rounded corners, rotate around={-40:(1,1)}] (1, 1) rectangle (1.7, 2.4);
+                \fill [rotate around={-40:(1,1)}] (1.35, 2.4) circle [radius=2pt];
+                \draw [->, dashed, rotate around={-40:(1,1)}] (1.35, 0) -- (1.35, 3);
+                \draw (0.83, 0) arc (0:44:0.2);
+                \draw (0.93, 0) arc (0:45:0.3);
+                \node [right] at (0.9, 0.22) {$x_3$};
+            \end{tikzpicture}
+        \end{center}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Продовження приклада}
+
+        Нехай $A$ --- максимальне можливе прискорення автомобіля, тоді прискорення може набувати значень
+        $A \vf_1$, де $\vf_1 \in [0; 1]$ і знаходиться під контролем гравця-водія. Можна ввести ще одну фазову координату $x_4$ --- швидкість автомобіля.
+        Таким чином, можна ввести кривину як ще одну фазову координату $x_5$
+        (фізично --- це кут повороту передніх коліс), керуванням якої є $W \vf_2$, де $\vf_2 \in [-1; 1]$, а $W$ --- максимальна швидкість зміни $x_5$.
+
+        Система задає рух автомобіля у деякій диференціальній грі:
+        \begin{gather*}
+            \begin{cases}
+                \d{x_1} = x_4 \cos{x_3} \\
+                \d{x_2} = x_4 \sin{x_3} \\
+                \d{x_3} = x_4 x_5 \\
+                \d{x_4} = A \vf_1, \; \vf_1 \in [0; 1] \\
+                \d{x_5} = W \vf_2, \; \vf_2 \in [-1; 1]
+            \end{cases}
+        \end{gather*}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Опис руху}
+    
+        Вважаємо, що гра відбувається у \emph{фазовому просторі} $\E$ --- деякій області в $\R^n$ та на її межі.
+        Рух точки $x = \l(x_1, x_2, ..., x_n \r)$ у фазовому просторі описується системою диференціальних рівнянь
+        \begin{gather*}\label{eq_1}
+            \begin{cases}
+                \d{x_1}(t) = f_1(x_1(t), ..., x_n(t), u_1(x, t), ..., u_P(x, t), v_1(x, t), ..., w_E(x, t)) \\
+                \d{x_2}(t) = f_2(x_1(t), ..., x_n(t), u_1(x, t), ..., u_P(x, t), v_1(x, t), ..., w_E(x, t)) \\
+                \dots \\
+                \d{x_n}(t) = f_n(x_1(t), ..., x_n(t), u_1(x, t), ..., u_P(x, t), v_1(x, t), ..., w_E(x, t)) \\
+                x_1(0) = x_1^0, x_2(0) = x_2^0, ..., x_n(0) = x_n^0
+            \end{cases}
+        \end{gather*}
+        або, коротше,
+        \begin{gather*}\label{eq_2}
+            \begin{cases}
+                \d{x}(t) = {f}(x(t), u(x, t), v(x, t)) \\
+                x(0) = x_0
+            \end{cases}
+        \end{gather*}
+        Ці рівняння називаються \emph{рівняннями руху}. Функції $f_j$ є заданими та вважаються достатньо гладкими.
+    \end{frame}
+    \begin{frame}
+        \frametitle{Приклад}
+    
+        Якщо позначити через $(x_P, y_P)$ координати гравця $P$, через $(x_E, y_E)$ --- гравця $E$, через $w_P$ та $w_E$ їх сталі швидкості руху, 
+        а керування напрямком швидкості через $u(t)$ та $v(t)$ відповідно, то отримаємо такі рівняння руху:
+        \begin{gather*}
+            \begin{cases}
+                \d{x_P}(t) = w_P \cos u(t) \\
+                \d{y_P}(t) = w_P \sin u(t) \\
+                \d{x_E}(t) = w_E \cos v(t) \\
+                \d{y_E}(t) = w_E \sin v(t) \\
+                (x_P(0), y_P(0)) = (x_P^0, y_P^0) \\
+                (x_E(0), y_E(0)) = (x_E^0, y_E^0)
+            \end{cases}
+        \end{gather*}
+        Такий рух називається <<переслідуванням на площині з простим рухом гравців>>.
+    \end{frame}
+    \begin{frame}
+        \frametitle{Виграші}
+    
+        Мета диференціальної гри визначається виграшем, який залежить від траєкторій гравців. 
+        Позначимо ці траєкторії як функції від часу як $x(t)$ та $y(t)$. 
+        Зауважимо, що диференціальні ігри є \emph{антагоністичними} (або ж, \emph{іграми з нульовою сумою}).
+
+        Якщо гра триває деякий заздалегідь визначений час $T$, то виграш гравця $E$ визначається
+        як $H(x(t), y(T))$, де $H : \R^n \times \R^n \to \R$ --- деяка функція (нагадаємо, що розмірність $\E$ --- $n$).
+
+        \begin{block}{Приклади виграшів}
+            \begin{enumerate}
+                \item $H(x(T), y(T)) = \norm{x(T) - y(T)}$
+                \item $H(x(T), y(T)) = \underset{0 \leq t \leq T}{\min} \norm{x(t) - y(t)}$
+                \item $H(x(T), y(T)) = t_* = \min \l\{ t \geq 0 : (x(t), y(t)) \in \T\r\}$
+            \end{enumerate}
+        \end{block}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Приклад}
+    
+        Розглянемо переслідування на площині з простим рухом, що описується системою
+        \begin{gather*}
+            \begin{cases}
+                \d{x_1} = u_1, \d{x_2} = u_2, \; u_1^2 + u_2^2 \leq \alpha^2 \\
+                \d{y_1} = v_1, \d{y_2} = v_2, \; v_1^2 + v_2^2 \leq \beta^2 \\
+                x_1(0) = x_1^0, x_2(0) = x_2^0, y_1(0) = y_1^0, y_2(0) = y_2^0
+            \end{cases}
+        \end{gather*}
+
+        Якщо $\alpha > \beta$, то гравець $P$ може гарантувати
+        \begin{gather*}
+            \forall l \geq 0 : \min \l\{ t \geq 0 : \norm{P(t) - E(t)} \leq l\r\} < +\infty
+        \end{gather*}
+
+        Якщо $\alpha \leq \beta$, то в разі $\norm{P(0) - E(0)} > l$ для всіх $l \geq 0$ гравець $E$, рухаючись від $P$ по прямій з максимальною швидкістю,
+        зможе уникнути захоплення гравцем $P$.
+    \end{frame}
+    \begin{frame}
+        \frametitle{Поняття стратегії}
+    
+        \begin{block}{Означення}
+            \emph{Стратегіями} у диференціальній грі є вибір керувань $u$ та $v$ як функцій від часу $t$ та
+            фазових координат $x$ у системі рівнянь руху
+            $$
+            \begin{cases}
+                \d{x}(t) = {f}(x(t), u(x, t), v(x, t)) \\
+                x(0) = x_0
+            \end{cases}
+            $$
+        \end{block}
+        Керування вважаються кусково-гладкими як компроміс між забезпеченням існування розв'язку, 
+        (його може не існувати у класі неперервних функцій) та його єдиності (вона може порушуватися, якщо не вимагати неперервності розв'язку).
+
+        Позначатимемо через $\rm P$ та $\rm E$ множини кусково-неперервних стратегій (керувань) гравців $P$ та $E$. 
+    \end{frame}
+    \begin{frame}
+        \frametitle{Ситуація}
+    
+        Надалі для спрощення розглядатимемо не один вектор $x$, а два вектори $x$ та $y$, що відповідатимуть руху кожного з гравців. Тоді
+        систему можна записати як
+        \begin{gather}\label{eq_3}
+            \begin{cases}
+                \d{x}(t) = f(x(t), u(x, y, t)) \\
+                \d{y}(t) = g(x(t), v(x, y, t)) \\
+                x(0) = x_0, y(0) = y_0
+            \end{cases}
+        \end{gather}
+
+        \begin{block}{Означення}
+            Набір $S = \l\{x_0, y_0, u(\cdot), v(\cdot) \r\}$, де $x_0, y_0$ --- початкові умови, а $u \in \rm P$, $v \in \rm E$ --- керування, 
+            називається \emph{ситуацією} в диференціальній грі.
+        \end{block}
+
+        
+    \end{frame}
+    \begin{frame}
+        \frametitle{Умова існування та єдиності траекторій}
+    
+        Якщо розглядати траєкторії, що залежать лише від часу $t$ та накладати на $f$ та $g$ умови
+        обмеженості та ліпшицевості по $x$ та $y$, тобто
+        \begin{gather*}
+            \norm{f(x_1, u) - f(x_2, u)} \leq \alpha \cdot \norm{x_1 - x_2}, \\
+            \norm{g(y_1, v) - g(y_2, v)} \leq \beta \cdot \norm{y_1 - y_2},
+        \end{gather*}
+        то за теоремою про існування та єдиність роз'язку задачі Коші, для кожної ситуації $S$ буде існувати єдина пара траєкторій $x(t), y(t)$,
+        для якої 
+        \begin{gather*}
+            \begin{cases}
+                \d{x}(t) = f(x(t), u(t)) \\
+                \d{y}(t) = g(y(t), v(t)) \\
+                x(0) = x_0, y(0) = y_0
+            \end{cases}
+        \end{gather*}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Формальне визначення виграшів та їх види}
+
+        \begin{block}{Означення}
+            Користуючись означенням ситуації, можна ввести \emph{виграш} в ситуації $S = \l\{x_0, y_0, u(\cdot), v(\cdot) \r\}$
+            як функцію $K(x_0, y_0, u(\cdot), v(\cdot))$.
+        \end{block}
+
+        Наведемо строгі означення 4 видів виграшів.
+
+        \begin{block}{Означення}
+            \begin{enumerate}
+                \item \emph{Термінальний виграш.} Задано деяке число $t>0$ та неперервна по $x$ та $y$ функція $H(x, y)$. Виграш в ситуації $\l\{x_0, y_0, u(\cdot), v(\cdot) \r\}$
+                визначається як:
+                \begin{gather*}
+                    K(x_0, y_0, u(\cdot), v(\cdot)) = H(x(T), y(T))
+                \end{gather*}
+            \end{enumerate}
+        \end{block}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Види виграшів}
+        
+        \begin{block}{Означення}
+            \begin{enumerate}
+                \setcounter{enumi}{1}
+                \item \emph{Мінімальний результат}. Задано деяке число $t>0$ та неперервна по $x$ та $y$ функція $H(x, y)$. Виграш в ситуації $\l\{x_0, y_0, u(\cdot), v(\cdot) \r\}$
+                визначається як
+                \begin{gather*}
+                    K(x_0, y_0, u(\cdot), v(\cdot)) = \underset{0 \leq t \leq T}{\min} H(x(t), y(t))
+                \end{gather*}
+
+                \item  \emph{Інтегральний виграш}. Нехай $\T$ --- деяка підмножина $\R^n \times \R^n$, $H(x, y)$ --- неперервна функція. Нехай в ситуації $\l\{x_0, y_0, u(\cdot), v(\cdot) \r\}$
+                $t_*$ --- перший момент потрапляння траєкторії $(x(t), y(t))$ на $\T$.
+                Тоді
+                \begin{gather*}
+                    K(x_0, y_0, u(\cdot), v(\cdot)) = \intl_0^{t_*} H(x(t), y(t)) dt
+                \end{gather*}
+                де при $t_* = +\infty$ покладається $K = +\infty$.
+
+            \end{enumerate}
+        \end{block}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Види виграшів}
+    
+        \begin{block}{Означення}
+            \begin{enumerate}
+                \setcounter{enumi}{3}
+                \item \emph{Якісний виграш}. Нехай $\T$ та $\mathcal{L}$ --- деякі підмножини $\R^n \times \R^n$, а $t_*$ --- перший момент потрапляння траєкторії $(x(t), y(t))$ на $\T$
+                в ситуації $\l\{x_0, y_0, u(\cdot), v(\cdot) \r\}$. Тоді
+                \begin{gather*}
+                    K(x_0, y_0, u(\cdot), v(\cdot)) = \begin{cases}
+                        1, & \text{ якщо } (x(t_*), y(t_*)) \in \mathcal{L} \\
+                        0, & \text{ якщо } t_* = +\infty \\
+                        -1, & \text{ якщо } (x(t_*), y(t_*)) \notin \mathcal{L} \\
+                    \end{cases}
+                \end{gather*}
+            \end{enumerate}
+        \end{block}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Нормальна форма диференціальної гри}
+    
+        Нарешті, можна дати означення нормальної форми диференціальної гри.
+
+        \begin{block}{Означення}
+            Нормальною формою диференціальної гри $\Gamma (x_0, y_0)$, заданої на просторі стратегій $\mathrm{P} \times \mathrm{E}$, називається система
+            \begin{gather}
+                \Gamma (x_0, y_0) = \l<x_0, y_0, \mathrm {P}, \mathrm{E}, K(x_0, y_0, u(\cdot), v(\cdot)) \r>
+            \end{gather}
+            де $K(x_0, y_0, u(\cdot), v(\cdot))$ --- функція виграшу, визначена будь-який з чотирьох способів вище.
+        \end{block}
+
+        Кожній парі $(x_0, y_0) \in \R^n \times \R^n$ відповідає своя гра в нормальній формі, тобто, фактично,
+        визначається двопараметрична сім'я ігор, що залежать від $(x_0, y_0)$.
+    \end{frame}
+\end{document}
