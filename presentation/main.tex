@@ -19,6 +19,23 @@
 \usepgfplotslibrary{fillbetween}
 \pgfplotsset{compat=1.17}
 
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{positioning,arrows}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{calc}
+\tikzset{
+	block/.style={
+		draw, 
+		rectangle, 
+		minimum height=1cm, 
+		minimum width=3cm, align=center
+	}, 
+	line/.style={->,>=stealth'}}
+\tikzset{>=latex}
+
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\vf}{\varphi}
 \renewcommand{\d}[1]{\dot{#1}}
@@ -212,13 +229,13 @@
     
         Надалі для спрощення розглядатимемо не один вектор $x$, а два вектори $x$ та $y$, що відповідатимуть руху кожного з гравців. Тоді
         систему можна записати як
-        \begin{gather}\label{eq_3}
+        \begin{gather*}
             \begin{cases}
                 \d{x}(t) = f(x(t), u(x, y, t)) \\
                 \d{y}(t) = g(x(t), v(x, y, t)) \\
                 x(0) = x_0, y(0) = y_0
             \end{cases}
-        \end{gather}
+        \end{gather*}
 
         \begin{block}{Означення}
             Набір $S = \l\{x_0, y_0, u(\cdot), v(\cdot) \r\}$, де $x_0, y_0$ --- початкові умови, а $u \in \rm P$, $v \in \rm E$ --- керування, 
@@ -315,13 +332,572 @@
 
         \begin{block}{Означення}
             Нормальною формою диференціальної гри $\Gamma (x_0, y_0)$, заданої на просторі стратегій $\mathrm{P} \times \mathrm{E}$, називається система
-            \begin{gather}
+            \begin{gather*}
                 \Gamma (x_0, y_0) = \l<x_0, y_0, \mathrm {P}, \mathrm{E}, K(x_0, y_0, u(\cdot), v(\cdot)) \r>
-            \end{gather}
+            \end{gather*}
             де $K(x_0, y_0, u(\cdot), v(\cdot))$ --- функція виграшу, визначена будь-який з чотирьох способів вище.
         \end{block}
 
         Кожній парі $(x_0, y_0) \in \R^n \times \R^n$ відповідає своя гра в нормальній формі, тобто, фактично,
         визначається двопараметрична сім'я ігор, що залежать від $(x_0, y_0)$.
+    \end{frame}
+    \begin{frame}
+        \frametitle{Простий рух на площині}
+    
+        Розглянемо найпростіші моделі задач переслідування --- диференціальні ігри на площині з двома учасниками:
+        переслідувачем $P$ та утікачем $E$, траєкторії яких відповідно позначатимемо $x(t)$ та $y(t)$.
+        Під \emph{простим рухом} мається на увазі, що закони їх руху описуються системою
+        \begin{gather*}
+            \begin{cases}
+                \d{x} = u, & \norm{u} \leq \alpha \\
+                \d{y} = v, & \norm{v} \leq \beta 
+            \end{cases}
+        \end{gather*}
+        Тут $\norm{z} = \sqrt{z_1^2 + z_2^2}$.
+        Такі закони руху означають, що гравці рухаються з обмеженою швидкістю,
+        але напрямок руху можуть змінювати довільно. Проінтегрувавши рівняння, можна явно записати траєкторії руху як
+        \begin{gather*}
+            x(t) = x(0) + \intl_0^t u(s) ds, \;
+            y(t) = y(0) + \intl_0^t v(s) ds
+        \end{gather*}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Приклад}
+        \begin{block}{Умова}
+            Нехай $u(t) = \begin{pmatrix} -\sin t \\ 2 \cos {2t}\end{pmatrix}$, 
+            $v(t) = \begin{pmatrix} -\sqrt{2}\sin t \\ \sqrt{2}\cos t \end{pmatrix}$,
+            $x(0) = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$, 
+            $y(0) = \begin{pmatrix} \sqrt{2} \\ 0 \end{pmatrix}$, 
+            а гра триває до моменту $T = 2\pi$.
+            Знайти значення функції виграшу мінімального результату з $H(x, y) = \norm{x - y}$.    
+        \end{block}
+        Знайдемо рівняння траєкторій:
+        \begin{gather*}
+            x(t) = \begin{pmatrix} 1 \\ 0 \end{pmatrix} +
+            \intl_0^t \begin{pmatrix} -\sin s \\ 2 \cos {2s} \end{pmatrix} ds = 
+            \begin{pmatrix} 1 \\ 0 \end{pmatrix} +
+            \l.\begin{pmatrix} \cos s \\ \sin{2s} \end{pmatrix}\r|_0^t = 
+            \begin{pmatrix} \cos t \\ \sin{2t} \end{pmatrix}
+        \end{gather*}
+        \begin{gather*}
+            y(t) = \begin{pmatrix} \sqrt{2} \\ 0 \end{pmatrix} +
+            \intl_0^t \begin{pmatrix} -\sqrt{2}\sin s \\ \sqrt{2}\cos s  \end{pmatrix} ds = 
+            \begin{pmatrix} \sqrt{2}\cos t \\ \sqrt{2}\sin t \end{pmatrix}
+        \end{gather*}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Приклад}
+
+        На декартовій площині ці траекторії матимуть вигляд:
+        \begin{center}
+            \begin{tikzpicture}[scale=0.9]
+                \begin{axis}
+                    [axis lines = center,
+                    axis equal,
+                    trig format plots=rad,
+                    xmin=-1.5, xmax=1.5, ymin=-1.5, ymax=1.5,
+                    legend pos = outer north east]
+                    \addplot [
+                        domain=0:2*pi,
+                        samples=100,
+                        color=red,
+                        decoration={markings, mark=between positions 0.05 and 0.1 step 2em with {\arrow [scale=1.5]{stealth}}
+                        }, postaction=decorate, forget plot
+                    ] ({cos(x)}, {sin(2*x)});
+                    \addlegendimage{red}
+                    \addlegendentry{$x(t)$}
+                    \addplot [
+                        domain=0:2*pi,
+                        samples=100,
+                        color=green,
+                        decoration={markings, mark=between positions 0.05 and 0.1 step 2em with {\arrow [scale=1.5]{stealth}}
+                        }, postaction=decorate, forget plot
+                    ] ({sqrt(2)*cos(x)}, {sqrt(2)*sin(x)});
+                    \addlegendimage{green}
+                    \addlegendentry{$y(t)$}
+                \end{axis}
+            \end{tikzpicture}
+        \end{center}
+        Значення $K = \underset{0 \leq t \leq 2\pi}{\min} \norm{x(t) - y(t)}$ можна знайти чисельно:
+        $K \approx 0.282394$ при $t \approx 0.850448$.
+    \end{frame}
+    \begin{frame}
+        \frametitle{Простий рух в $\R^n$}
+    
+        Тепер розглянемо гру переслідування вже не на площині $\R^2$, а в $\R^n$:
+        \begin{gather*}
+            \begin{cases}
+                \d{x} = u, & \norm{u} \leq \alpha \\
+                \d{y} = v, & \norm{v} \leq \beta \\
+                x(0) = x_0, \; y(0) = y_0
+            \end{cases}
+        \end{gather*}
+        Тут усі величини є $n$-вимірними векторами, і, як раніше, $x(t)$ --- траєкторія
+        руху переслідувача $P$, $y(t)$ --- утікача $E$.
+    
+        Нехай $\alpha > \beta$, тобто, переслідувач може рухатися швидше за утікача. 
+        Тоді можна довести, що яку б стратегію $v(t)$ не обрав утікач $E$, переслідувач $P$ наздожене його не пізніше,
+        ніж за $\frac{\norm{x_0 - y_0}}{\alpha - \beta}$, використовуючи стратегію $u(t) = - \frac{\alpha}{\norm{x(t) - y(t)}} (x(t) - y(t))$,
+        причому переслідування буде найдовшим, якщо $E$ обере <<раціональну>> стратегію $v(t) = - \frac{\beta}{\norm{x(t) - y(t)}} (x(t) - y(t))$
+        (див. повний текст).
+
+    \end{frame}
+    \begin{frame}
+        \frametitle{Приклад}
+    
+        \begin{block}{Умова}
+            Нехай $\alpha = 3, \beta = 1$, гра починається з $x_0 = \begin{pmatrix}
+                0 \\ 0
+            \end{pmatrix}$ та $y_0 = \begin{pmatrix}
+                1 \\ 1
+            \end{pmatrix}$, утікач обирає <<нераціональне>> керування $\d{y} = -\beta\begin{pmatrix}
+                \cos t \\ \sin t
+            \end{pmatrix}$, інший гравець обирає керування вказане вище.
+        \end{block}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Приклад}
+    
+        Розв'яжемо чисельно (методом Рунге-Кутта) відповідну систему диференціальних рівнянь і подивимося на графіки $x(t)$ та $y(t)$ в залежності від часу.
+        Отримаємо такі траекторії руху:
+        \begin{center}
+            \resizebox{220pt}{!}{
+                \input{../code/unoptimal_chase_2d.tex}
+            }
+        \end{center}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Лінійна диференціальна гра}
+    
+        \begin{block}{Означення}
+            \emph{Лінійною диференціальною грою} називається гра з фазовим простором
+            $\R^n$, що описується рівнянням
+            \begin{gather*}
+                \begin{cases}
+                    \d{z}(t) = A z(t) - u(t) + v(t) \\
+                    z(0) = z_0 \\
+                    u \in U, \; v \in V
+                \end{cases}
+            \end{gather*}
+            де $A$ --- деяка стала матриця порядку $n\times n$, $U$ та $V$ --- опуклі компактні
+            підмножини $\R^n$. Також задано матрицю $\pi$, що є матрицею проекції на ортогональне доповнення до термінальної множини.
+        \end{block}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Лінійна диференціальна гра}
+    
+        Ця гра відбувається таким чином: в кожний момент часу $t$ утікач $E$ знає параметри гри
+        $\l(A, U, V, z_0, \pi \r)$ та обирає своє керування $v(t) \in V$, повідомляючи про свій вибір
+        переслідувача $P$, який, в свою чергу, обирає керування $u(t) \in U$.
+        Якщо існує такий момент часу $T > 0$, коли переслідувач $P$ за будь-яких дій
+        утікача $E$ забезпечує виконання умови $\pi z(\tau) = 0$ для деякого
+        $\tau \in [0; T]$, то кажуть, що в переслідувач наздоганяє утікача.
+        Отримаємо умови, за яких це відбувається. Для цього треба ввести декілька нових означень.
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Операції над множинами}
+    
+        \begin{block}{Означення 1}
+            \emph{Сумою множин (за Мінковським)} $A$ і $B$ називається множина
+            $C = A + B = \l\{ a + b : a \in A, b \in B\r\}$.
+        \end{block}
+
+        \begin{block}{Означення 2}
+            \emph{Різницею множин (за Мінковським)} $A$ і $B$ називається найбільша така множина
+            $C = A \setdif B$, що $B + C \subset A$
+        \end{block}
+
+        \begin{block}{Означення 3}
+            \emph{Добутком} множини $A$ на число $\lambda \in \R$ називається множина
+            $\lambda \cdot A = \l\{\lambda \cdot a : a \in A \r\}$.
+        \end{block}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Приклад}
+    
+        Нехай $B_{r}(a) = \l\{x \in \R^n : \norm{x - a} \leq r \r\}$ --- куля
+        радіуса $r$ з центром в точці $a$. Для
+        $r \in \R$ та $a \in \R^n$ має місце
+        $r\cdot B_{1}(0) + \{a\} = B_{|r|}(a)$.
+        Сумою двох куль $B_{r_1}(a_1)$ та $B_{r_2}(a_2)$ є множина
+        \begin{gather*}
+            M = B_{r_1}(a_1) + B_{r_2}(a_2) = \l\{ 
+                x_1 + x_2 : \norm{x_1 - a_1} \leq r_1, \norm{x_2 - a_2} \leq r_2    
+            \r\}
+        \end{gather*}
+        Для $x = x_1 + x_2 \in M$: $\norm{(x_1 + x_2) - (a_1 + a_2)} \leq \norm{x_1 - a_1} + \norm{x_2 - a_2} \leq r_1 + r_2$,
+        тобто $M = B_{r_1 + r_2}(a_1 + a_2)$.
+        \begin{center}
+            \begin{tikzpicture}[scale=0.55]
+                \begin{axis}
+                    [axis lines = center,
+                    axis equal,
+                    trig format plots=rad,
+                    xmin=-1.5, xmax=1.5, ymin=-1, ymax=1.5,
+                    legend pos = outer north east]
+                    \draw [very thick] (1,1) circle (0.4);
+                    \draw [very thick] (-1,-0.6) circle (0.2);
+                    \draw [very thick] (0,0.4) circle(0.6);
+                    \node [below] at (1,0.6) {$B_1$};
+                    \node [left] at (-1.2,-0.5) {$B_2$};
+                    \node [above left] at (-0.52,0.7) {$B_1 + B_2$};
+                    \draw [dashed] (1,0) -- (1,1) -- (0,1);
+                    \draw [dashed] (-1,0) -- (-1,-0.6) -- (0,-0.6);
+                    \fill (1,1) circle (0.03);
+                    \fill (-1,-0.6) circle (0.03);
+                    \fill (0,0.4) circle (0.03);
+                \end{axis}
+            \end{tikzpicture}
+        \end{center}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Інтеграл багатозначного відображення}
+    
+        \begin{block}{Означення}
+            Нехай $W(t)$ --- неперервна функція з дійсним аргументом, значеннями якої
+        є компактні підмножини $\R^n$ (\emph{багатозначне відображення}).
+        \emph{Інтегралом} за проміжком $[a;b]$ від неї називається множина
+        $\intl_a^b W(t) dt$, яку можна розуміти в сенсі ріманової суми
+        $\underset{n\to\infty}{\lim} \suml_{i=0}^n \Delta t_i\cdot W(t_i^*)$,
+        де $\l\{\Delta t_i\r\}_{i=1}^n$ --- довжини відрізків, на які розбивається $[a;b]$, $t_i^* \in \Delta t_i$ ---
+        деякі точки з цих відрізків, а сума розуміється в сенсі суми множин за Мінковським.
+            \end{block}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Умови того, що $P$ дожене $E$}
+    
+        Нехай у лінійній диференціальній грі виконуються дві умови:
+        \begin{enumerate}
+            \item Для всіх $t>0$: $W(t) = \pi e^{At}U \setdif \pi e^{At}V \neq \varnothing$.
+            \item Існує такий момент часу $T_0$, що $\pi e^{AT_0}z_0 \in \intl_0^T W(T_0 - s)ds$.
+        \end{enumerate}
+
+        Можна довести, що в разі виконання цих умов переслідувач наздожене утікача.
+    
+        Розв'язок задачі Коші та його образ під дією $\pi$ мають вигляд
+        \begin{gather*}
+            z(t) = e^{A t} z_0 + \intl_0^t e^{A(t-s)} (- u(s) + v(s)) ds
+        \end{gather*}
+        \begin{gather*}
+            \pi z(t) =  \pi e^{A t} z_0 + \intl_0^t \pi e^{A(t-s)} (- u(s) + v(s)) ds
+        \end{gather*}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Метод Понтрягіна}
+    
+        Наведемо алгоритм застосування методу Понтрягіна:
+    
+        \begin{enumerate}
+            \item Знайти множину $W(t) = \pi e^{At}U \setdif \pi e^{At}V$.
+            \item Знайти множину $\Omega(t) = \intl_0^t W(s)ds$.
+            \item Знайти $T_0$, для якого $\pi e^{A T_0} z_0 \in \Omega(T_0)$.
+            \item Знайти функцію $w(t) \in W(t)$ таку, що $\pi e^{A T_0} z_0 = \intl_0^{T_0} w(s) ds$.
+            \item Знайти керування $u(t)$ як розв'язок $\pi e^{A (T_0-s)} u(s) - \pi e^{A (T_0-s)} v(s) = w(T_0 - s) $ при заданому керуванні $v(t) \in V$.
+            \item Знайти розв'язок задачі Коші $\d{z} = Az - u(t) + v(t), \; z(0) = z_0$ на відрізку $[0; T_0]$.
+        \end{enumerate}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Контрольний метод Понтрягіна}
+    
+        \begin{block}{Умова}
+            Нехай рух гравців в $\R^n$, $n\geq 2$, описується системою
+            \begin{gather*}
+                \begin{cases}
+                    \dd{x} + \alpha \d{x} = a, & \norm{a} \leq \rho \\
+                    \dd{y} + \beta \d{y} = b, & \norm{b} \leq \sigma
+                \end{cases}
+            \end{gather*}
+            де $\alpha, \beta, \rho, \sigma$ --- додатні числа. Переслідувач наздоганяє утікача, якщо $x=y$.
+            Ця система описує рух точки одиничної маси під дією сили-керування з урахуванням тертя,
+            що лінійно залежить від швидкості.
+        \end{block}
+
+        Перейдемо до системи диференціальних рівнянь першого порядку за допомогою замін $z^1 = x - y$, $z^2 = \d{x}$, $z^3 = \d{y}$:
+        \begin{gather*}
+            \begin{cases}
+                \d{z}^1 = z^2 - z^3 \\
+                \d{z}^2 = -\alpha z^2 + a \\
+                \d{z}^3 = -\beta z^3 + b
+            \end{cases}
+        \end{gather*}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Контрольний приклад Понтрягіна}
+    
+        Керування $u$ та $v$ задаються формулами $u = (0, -a, 0)^T$, $v = (0, 0, b)^T$, тому
+        $U = \l\{(0, -a, 0)^T : \norm{a} \leq \rho \r\}$, $V = \l\{(0, 0, b)^T : \norm{b} \leq \sigma \r\}$.
+        Оператор $\pi$ задано як $\pi: (z^1, z^2, z^3)^T \mapsto (z^1, 0, 0)^T$, а матриця $A$
+        дорівнює $\begin{pmatrix}
+            0 & 1 & -1 \\
+            0 & -\alpha & 0 \\
+            0 & 0 & -\beta
+        \end{pmatrix}$. 
+        
+        Знайдемо $e^{A t}$ (за допомогою перетворення Лапласа):
+    
+        \begin{gather*}
+            e^{At} = \Lap{(pI - A)^{-1}} \Leftrightarrow (pI - A)^{-1} = \LapInv{e^{At}} \\
+            pI - A = \begin{pmatrix}
+                p & -1 & 1 \\
+                0 & p+\alpha & 0 \\
+                0 & 0 & p + \beta \\
+            \end{pmatrix}
+        \end{gather*}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Контрольний приклад Понтрягіна}
+
+        \begin{gather*}
+            (pI - A)^{-1} = \frac{1}{p(p+\alpha)(p+\beta)}\begin{pmatrix}
+                (p+\alpha)(p+\beta) & (p+\beta) & -(p+\alpha) \\
+                0 & p(p+\beta) & 0 \\
+                0 & 0 & p(p+\alpha)
+            \end{pmatrix} = \\ =
+            \begin{pmatrix}
+                \frac{1}{p} & \frac{1}{p(p+\alpha)} & - \frac{1}{p(p+\beta)} \\
+                0 & \frac{1}{p+\alpha} & 0 \\
+                0 & 0 & \frac{1}{p+\beta}
+            \end{pmatrix} \Rightarrow
+            e^{At} = \begin{pmatrix}
+                1 & \frac{1 - e^{-\alpha t}}{\alpha} & -\frac{1 - e^{-\beta t}}{\beta} \\
+                0 & e^{-\alpha t} & 0 \\
+                0 & 0 & e^{-\beta t}
+            \end{pmatrix}
+        \end{gather*}   
+
+        Тепер можна записати $\pi e^{At}(z^1, z^2, z^3) = z^1 + \frac{1 - e^{-\alpha t}}{\alpha} z^2 - \frac{1 - e^{-\beta t}}{\beta}z^3$, звідки
+        \begin{gather*}
+            \pi e^{At} U = \l\{\frac{1 - e^{-\alpha t}}{\alpha} \cdot (-a) : \norm{a} \leq \rho\r\} \\ 
+            \pi e^{At} V = \l\{-\frac{1 - e^{-\beta t}}{\beta} \cdot b : \norm{b} \leq \sigma\r\}
+        \end{gather*}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Контрольний приклад Понтрягіна}
+    
+        Отже, $\pi e^{At} U$ --- куля з радіусом $\frac{1 - e^{-\alpha t}}{\alpha}\rho$ і центром в нулі,
+        а $\pi e^{At} V$ --- куля з радіусом $\frac{1 - e^{-\beta t}}{\beta}\sigma$ і центром в нулі, тому
+        $W(t) = \pi e^{At}U \setdif \pi e^{At}V$ --- куля з радіусом 
+        $\frac{1 - e^{-\alpha t}}{\alpha}\rho - \frac{1 - e^{-\beta t}}{\beta}\sigma$ і центром теж в нулі.
+        Радіус $W(t)$ буде додатнім при $\rho > \sigma$ та $\frac{\rho}{\alpha} > \frac{\sigma}{\beta}$.
+        
+        $\Omega(t) = \intl_0^t W(s) ds$ буде кулею
+        з радіусом:
+        \begin{gather*}
+            \intl_0^t \left(\frac{1 - e^{-\alpha s}}{\alpha}\rho - \frac{1 - e^{-\beta s}}{\beta} \sigma\right) ds = 
+            \rho \intl_0^t \frac{1 - e^{-\alpha s}}{\alpha} ds - \sigma \intl_0^t \frac{1 - e^{-\beta s}}{\beta} ds =
+        \end{gather*}
+        \begin{gather*}
+            = \frac{\rho}{\alpha^2}\l(\alpha t + e^{-\alpha t} - 1\r) - 
+            \frac{\sigma}{\beta^2}\l(\beta t + e^{-\beta t} - 1\r) = r(t)
+        \end{gather*}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Контрольний приклад Понтрягіна}
+    
+        Далі необхідно знайти таке (найменше) значення $T_0$, для якого точка $\pi e^{A T_0}(z^1_0, z^2_0, z^3_0)$ належить
+        $\Omega(T_0)$. З геометричних міркувань це буде найменший корінь рівняння
+        \begin{gather*}
+            \frac{\rho}{\alpha^2}\l(\alpha t + e^{-\alpha t} - 1\r) - 
+            \frac{\sigma}{\beta^2}\l(\beta t + e^{-\beta t} - 1\r) = \norm{\pi e^{A t} z_0}
+        \end{gather*}
+
+    \end{frame}
+    \begin{frame}
+        \frametitle{Контрольний приклад Понтрягіна}
+    
+        Наступний крок будемо проводити на конкретному прикладі. Нехай гра відбувається на площині з 
+        $\alpha=1$, $\beta=2$, $\rho=2$, $\sigma=1$ та
+        початковими умовами $x(0) = \begin{pmatrix}
+            3 \\ 2
+        \end{pmatrix}, \d{x}(0) = \begin{pmatrix}
+            1 \\ 1
+        \end{pmatrix}, y(0) = \begin{pmatrix}
+            1 \\ 0
+        \end{pmatrix}, \d{y}(0) = \begin{pmatrix}
+            0 \\ 1
+        \end{pmatrix}$. Чисельно можна знайти значення $T_0 \approx 3.715$.
+        \begin{center}
+            \resizebox{160pt}{!}{
+                \input{../code/pontr_method_plot.tex}
+            }
+        \end{center}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Метод розв’язуючих функцій}
+    
+        Метод розв’язуючих функцій належить А.О. Чикрію.
+        Розглядається не просто лінійна диференціальна гра, а більш загальна
+        \emph{квазілінійна} гра виду:
+    
+        \begin{gather*}
+            \begin{cases}
+                \d{z} = A z + \vf(u, v) \\
+                z(0) = z_0 \\
+                z \in \R^n, u \in U, v \in V
+            \end{cases}
+        \end{gather*}
+        де $\vf(u, v) : U\times V \to \R^n$ --- неперервна за обома змінними функція.
+        
+        \begin{block}{Зауваження}
+            У випадку $\vf(u,v) = -u + v$ отримуємо лінійну диференціальну гру.
+        \end{block}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Метод розв’язуючих функцій}
+    
+        Термінальна множина має вид $M^* = M^0 + M$, де
+        $M^0$ --- деякий лінійний підпростір $\R^n$, а $M$ --- компактна підмножина ортогонального доповнення $M^0$,
+        $\pi$ --- проектор на $(M^0)^\perp$.
+
+        Нехай $\vf(U, v) = \l\{\vf(u,v) : u \in U\r\}$ для фіксованої $v \in V$,
+        $W(t, v) = \pi e^{At} \vf(U, v)$,
+        $W(t) = \bigcap\limits_{v \in V} W(t, v), t\geq 0$. 
+        \begin{block}{Зауваження}
+            У випадку $\vf(u,v) = -u + v$ $W(t) = \pi e^{At}U \setdif \pi e^{At} V$.
+        \end{block}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Позначення}
+    
+        Вводяться позначення:
+        \begin{gather*}
+            \gamma(t) \in W(t) \text{ --- вимірна функція} \\
+            \xi(t, z, \gamma(\cdot)) = \pi e^{A t} + \intl_0^t \gamma(\tau) d\tau \\
+            \alpha(t, \tau, z, v, \gamma(\cdot)) = \\ = \sup\l\{ 
+                \alpha \geq 0 : \l[ W(t-\tau, v) - \gamma(t-\tau)\r] \cap \alpha
+                \l[M - \xi(t, z, \gamma(\cdot))\r] \neq \varnothing
+            \r\} \\
+            T(z, \gamma(\cdot)) = \inf \l\{ 
+                t\geq 0: \intl_0^t \underset{v\in V}{\inf} \alpha(t, \tau, z, v, \gamma(\cdot)) d\tau \geq 1
+            \r\}
+        \end{gather*}
+
+        \begin{block}{Означення}
+            $\alpha(t, \tau, z, v, \gamma(\cdot))$ називається \emph{розв'язуючою функцією}.
+        \end{block}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Метод розв’язуючих функцій}
+    
+        Можна довести наступне: якщо $W(t) \neq \varnothing$ для всіх $t\geq 0$,
+        $M$ --- опукла множина, $T(z_0, \gamma_0(\cdot)) < +\infty$ для деякого початкового положення
+        $z_0$ та деякої $\gamma_0(\cdot)$, то за час $T(z_0, \gamma_0(\cdot))$ гравці потрапляють у термінальну множину.
+
+        Також можна довести, що якщо гра є лінійною,
+        $W(t) = \pi e^{At}U \setdif \pi e^{At} V \neq \varnothing$, існує неперервна 
+        $r(t): [0; +\infty) \to [0; +\infty)$ та число $l \geq 0$ такі, що
+        $\pi e^{A t}U = r(t) S$, $M = l S$, де $S$ --- одинична куля в $(M^0)^\perp$ з центром в нулі, то
+        при $\xi(t, z, \gamma(\cdot)) \notin l S$, розв'язуюча функція $\alpha$ може бути знайдена як найбільший додатний корінь квадратного рівняння
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Контрольний приклад Понтрягіна}
+    
+        Як і у минулому розв’язку цього прикладу перейдемо від системи
+    
+        \begin{gather*}
+            \begin{cases}
+                \dd{x} + \alpha \d{x} = \rho u, & \norm{a} \leq 1 \\
+                \dd{y} + \beta \d{y} = \sigma v, & \norm{b} \leq 1
+            \end{cases}
+        \end{gather*}
+
+        до системи з $z_1 = x - y$, $z_2 = \d{x}$, $z_3 = \d{y}$:
+        \begin{gather*}
+            \begin{cases}
+                \d{z}_1 = z_2 - z_3 \\
+                \d{z}_2 = -\alpha z_2 + \rho u \\
+                \d{z}_3 = -\beta z_3 + \sigma v
+            \end{cases}
+        \end{gather*}
+
+        Термінальна множина $M^* = \l\{z: z_1 = 0 \r\} = M^0 + \{0\}$, ортогональне доповнення
+        $(M^0)^\perp =\l\{z: z_2 = z_3 = 0 \r\}$, тому $\pi = \begin{pmatrix}
+            I & 0 & 0 \\
+            0 & 0 & 0 \\
+            0 & 0 & 0
+        \end{pmatrix}$, де $I$ та $0$ --- тотожній та нульовий оператор відповідно.
+
+    \end{frame}
+    \begin{frame}
+        \frametitle{Контрольний приклад Понтрягіна}
+    
+        Оскільки у вихідній системі рівнянь $x, y \in \R^n$, то $z \in \R^{3n}$,
+        то $\pi : \R^{3n} \to (M^0)^\perp$. Матриця системи
+        $A = \begin{pmatrix}
+            0 & E & -E \\
+            0 & -\alpha E & 0 \\
+            0 & 0 & -\beta E
+        \end{pmatrix}$,
+        $
+        U = \l\{ \begin{pmatrix}0 \\ \rho u \\ 0 \end{pmatrix} : \norm{u} \leq 1\r\}
+        $,
+        $
+        V = \l\{ \begin{pmatrix}0 \\ 0 \\ \sigma v \end{pmatrix} : \norm{v} \leq 1\r\}
+        $.
+        Аналогічно минулому прикладу,
+        \begin{gather*}
+            \pi e^{At} U = \frac{1 - e^{-\alpha t}}{\alpha} \rho S, \;
+            \pi e^{At} V = \frac{1 - e^{-\beta t}}{\beta} \sigma S \\
+            W(t) = \l(\frac{1 - e^{-\alpha t}}{\alpha} \rho - \frac{1 - e^{-\beta t}}{\beta} \sigma\r) S = \omega(t) S
+        \end{gather*}
+        Радіус цієї кулі невід'ємний при $\rho \geq \sigma$ та $\frac{\rho}{\alpha} \geq \frac{\sigma}{\beta}$.
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Контрольний приклад Понтрягіна}
+    
+        Поклавши $\gamma(t) = 0$, отримаємо
+        $\xi(t, z, 0) = z_1 + \frac{1 - e^{-\alpha t}}{\alpha} z_2 - \frac{1 - e^{-\beta t}}{\beta}z_3$.
+        Ця задача задовольняє всі умови для пошуку розв'язуючої функції через:
+        \begin{gather*}
+            \norm{\frac{1 - e^{-\beta t}}{\beta} \sigma v - \alpha \cdot \xi(t, z, 0)} = \frac{1 - e^{-\alpha t}}{\alpha} \rho
+        \end{gather*}
+        Можна показати, що 
+        \begin{gather*}
+            \underset{\norm{v}\leq 1}{\min}{\alpha(t, \tau, z, v, 0)} = \frac{\omega(t-\tau)}{\norm{\xi(t, z, 0)}}
+        \end{gather*}
+        і мінімум досягається при $v = -\frac{\xi(t, z, 0)}{\norm{\xi(t, z, 0)}}$
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Контрольний приклад Понтрягіна}
+    
+        Час, коли переслідувач наздожене утікача, визначається як
+        \begin{gather*}
+            T(z, 0) = \min \l\{ t\geq 0 : \intl_0^t \frac{\omega(t-\tau)}{\norm{\xi(t, z, 0)}} d\tau = 1 \r\}
+        \end{gather*}
+        або ж як найменший додатний корінь рівняння
+        \begin{gather*}
+            \norm{\xi(t, z, 0)} = \intl_0^t \l(\frac{1 - e^{-\alpha \tau}}{\alpha} \rho - \frac{1 - e^{-\beta \tau}}{\beta} \sigma\r) d\tau
+        \end{gather*}
+    
+    \end{frame}
+    \begin{frame}
+        \frametitle{Контрольний приклад Понтрягіна}
+    
+        Розглянемо тепер конкретний приклад. Нехай ця гра відбувається на площині з 
+        $\alpha=1$, $\beta=2$, $\rho=2$, $\sigma=1$ та
+        початковими умовами $x(0) = \begin{pmatrix}
+            3 \\ 2
+        \end{pmatrix}, \d{x}(0) = \begin{pmatrix}
+            1 \\ 1
+        \end{pmatrix}, y(0) = \begin{pmatrix}
+            1 \\ 0
+        \end{pmatrix}, \d{y}(0) = \begin{pmatrix}
+            0 \\ 1
+        \end{pmatrix}$.
+        Чисельно можна знайти значення $T_0 \approx 3.715$.
+        \begin{center}
+            \resizebox{160pt}{!}{
+                \input{../code/res_func_plot.tex}
+            }
+        \end{center}
+    
     \end{frame}
 \end{document}
