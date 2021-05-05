@@ -83,14 +83,16 @@
     \end{frame}
     \begin{frame}
         \frametitle{Історія виникнення}
-        \begin{tabular}{c c c}
-            \includegraphics[scale=0.275]{../pics/John_von_Neumann.jpg} &
-            \includegraphics[scale=0.4]{../pics/Oskar_Morgenstern.jpg} &
-            \includegraphics[scale=0.42]{../pics/Rufus_Isaacs.jpg} \\
-            Джон фон Нейман &
-            Оскар Морґенштерн &
-            Руфус Айзекс
-        \end{tabular}
+        \begin{center}
+            \begin{tabular}{c c c}
+                \includegraphics[scale=0.275]{../pics/John_von_Neumann.jpg} &
+                \includegraphics[scale=0.4]{../pics/Oskar_Morgenstern.jpg} &
+                \includegraphics[scale=0.42]{../pics/Rufus_Isaacs.jpg} \\
+                Джон фон Нейман &
+                Оскар Морґенштерн &
+                Руфус Айзекс
+            \end{tabular}
+        \end{center}
     \end{frame}
     \begin{frame}
         \frametitle{Основні поняття}
@@ -160,10 +162,10 @@
         Рух точки $x = \l(x_1, x_2, ..., x_n \r)$ у фазовому просторі описується системою диференціальних рівнянь
         \begin{gather*}\label{eq_1}
             \begin{cases}
-                \d{x_1}(t) = f_1(x_1(t), ..., x_n(t), u_1(x, t), ..., u_P(x, t), v_1(x, t), ..., w_E(x, t)) \\
-                \d{x_2}(t) = f_2(x_1(t), ..., x_n(t), u_1(x, t), ..., u_P(x, t), v_1(x, t), ..., w_E(x, t)) \\
+                \d{x_1}(t) = f_1(x_1(t), ..., x_n(t), u_1(x, t), ..., u_P(x, t), v_1(x, t), ..., v_E(x, t)) \\
+                \d{x_2}(t) = f_2(x_1(t), ..., x_n(t), u_1(x, t), ..., u_P(x, t), v_1(x, t), ..., v_E(x, t)) \\
                 \dots \\
-                \d{x_n}(t) = f_n(x_1(t), ..., x_n(t), u_1(x, t), ..., u_P(x, t), v_1(x, t), ..., w_E(x, t)) \\
+                \d{x_n}(t) = f_n(x_1(t), ..., x_n(t), u_1(x, t), ..., u_P(x, t), v_1(x, t), ..., v_E(x, t)) \\
                 x_1(0) = x_1^0, x_2(0) = x_2^0, ..., x_n(0) = x_n^0
             \end{cases}
         \end{gather*}
@@ -344,7 +346,7 @@
 
         \begin{block}{Означення}
             \begin{enumerate}
-                \item \emph{Термінальний виграш.} Задано деяке число $t>0$ та неперервна по $x$ та $y$ функція $H(x, y)$. Виграш в ситуації $\l\{x_0, y_0, u(\cdot), v(\cdot) \r\}$
+                \item \emph{Термінальний виграш.} Задано деяке число $T>0$ та неперервна по $x$ та $y$ функція $H(x, y)$. Виграш в ситуації $\l\{x_0, y_0, u(\cdot), v(\cdot) \r\}$
                 визначається як:
                 \begin{gather*}
                     K(x_0, y_0, u(\cdot), v(\cdot)) = H(x(T), y(T))
@@ -358,7 +360,7 @@
         \begin{block}{Означення}
             \begin{enumerate}
                 \setcounter{enumi}{1}
-                \item \emph{Мінімальний результат}. Задано деяке число $t>0$ та неперервна по $x$ та $y$ функція $H(x, y)$. Виграш в ситуації $\l\{x_0, y_0, u(\cdot), v(\cdot) \r\}$
+                \item \emph{Мінімальний результат}. Задано деяке число $T>0$ та неперервна по $x$ та $y$ функція $H(x, y)$. Виграш в ситуації $\l\{x_0, y_0, u(\cdot), v(\cdot) \r\}$
                 визначається як
                 \begin{gather*}
                     K(x_0, y_0, u(\cdot), v(\cdot)) = \underset{0 \leq t \leq T}{\min} H(x(t), y(t))
@@ -745,9 +747,9 @@
     \begin{frame}
         \frametitle{Контрольний приклад Понтрягіна}
     
-        Керування $u$ та $v$ задаються формулами $u = (0, -a, 0)^T$, $v = (0, 0, b)^T$, тому
+        Керування $u$ та $v$ задаються формулами $u = (0, -a, 0)^T$, $v = (0, 0, b)^T$, тому\\
         $U = \l\{(0, -a, 0)^T : \norm{a} \leq \rho \r\}$, $V = \l\{(0, 0, b)^T : \norm{b} \leq \sigma \r\}$.
-        Оператор $\pi$ задано як $\pi: (z^1, z^2, z^3)^T \mapsto (z^1, 0, 0)^T$, а матриця $A$
+        Оператор $\pi$ задано як\\ $\pi: (z^1, z^2, z^3)^T \mapsto (z^1, 0, 0)^T$, а матриця $A$
         дорівнює $\begin{pmatrix}
             0 & 1 & -1 \\
             0 & -\alpha & 0 \\
@@ -911,6 +913,9 @@
         $r(t): [0; +\infty) \to [0; +\infty)$ та число $l \geq 0$ такі, що
         $\pi e^{A t}U = r(t) S$, $M = l S$, де $S$ --- одинична куля в $(M^0)^\perp$ з центром в нулі, то
         при $\xi(t, z, \gamma(\cdot)) \notin l S$, розв'язуюча функція $\alpha$ може бути знайдена як найбільший додатний корінь квадратного рівняння
+        \begin{gather*}
+            \norm{\pi e^{a(t-\tau)}v + \gamma(t-\tau) - \alpha \cdot \xi(t, z, \gamma(\cdot))} = r(t-\tau) + \alpha l
+        \end{gather*}
     
     \end{frame}
     \begin{frame}
